@@ -1,87 +1,51 @@
 import sqlite3
 
-db = sqlite3.connect('bank.db')
+db = sqlite3.connect('mydatabase.db')
 
-fake_bank = db.cursor()
+school = db.cursor()
 
-fake_bank.execute(
-    "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, name TEXT, phone_number TEXT, password TEXT, "
-    "balance REAL);")
+school.execute(
+    'CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY AUTOINCREMENT ,name TEXT,age INTEGER,grade TEXT);')
 
-fake_bank.execute(
-    "CREATE TABLE IF NOT EXISTS user_transactions (id INTEGER, transactions TEXT, amount INTEGER, transaction_date "
-    "REAL);")
-
-
-def register_user(name, phone_number, password):
-    db = sqlite3.connect("bank.db")
-
-    fake_bank = db.cursor()
-
-    fake_bank.execute("INSERT INTO users(name,phone_number,password,balance)VALUES(?,?,?,0.0);",
-                      (name, phone_number, password,))
-    db.commit()
-    print(f'{name}успешно зарегистрирован')
+school.execute('INSERT INTO  students(name,age,grade)VALUES("axror",13,5+);')
+db.commit()
+school.execute('INSERT INTO  students(name,age,grade)VALUES("albert",16,5-);')
+db.commit()
+school.execute('INSERT INTO  students(name,age,grade)VALUES("fathulla",20,4+);')
+db.commit()
 
 
-def find_users(name, phone_number):
-    db = sqlite3.connect('bank.db')
+def get_student_by_name(name, age, grade):
+    db = sqlite3.connect('mydatabase.db')
 
-    fake_bank = db.cursor()
+    school = db.cursor()
 
-    result = fake_bank.execute('SELECT name,phone_number FROM users WHERE name=? and phone_number=?;', (name
-                                                                                                        ,
-                                                                                                        phone_number)).fetchone()
-    db.commit()
-
-
-def balance_add(amount, user_id):
-    db = sqlite3.connect('bank.db')
-
-    fake_bank = db.cursor()
-    deposit = fake_bank.execute('UPDATE users SET balance=balance+? WHERE id=?;', (amount, user_id))
-
-    db.commit()
-    print(f'ваш баланс изменен-ваша сечашняя сумма {amount}!!')
+    result = school.execute('SELECT name,phone_number FROM users WHERE name=? and age=? and grade=? ;', (name
+                                                                                                         ,
+                                                                                                         age,
+                                                                                                         grade)).fetchone()
 
 
-def balance_rem(amount, user_id):
-    db = sqlite3.connect('bank.db')
-
-    fake_bank = db.cursor()
-    fake_bank.execute('UPDATE users SET balance=balance-? WHERE id=?;', (amount, user_id))
-
-    db.commit()
-
-    print(f'ваш баланс изменен-ваша сечашняя сумма {amount}!!')
+db.commit()
 
 
-def balance_viewing(user_id):
-    db = sqlite3.connect('bank.db')
-    fake_bank = db.cursor()
-    viewing = fake_bank.execute("SELECT balance FROM users WHERE id=?;", (user_id,)).fetchone()
-    balance = viewing[0]
-    print(f'ваш баланс-{balance}')
+def update_student_grade(name, grade):
+    db = sqlite3.connect('mydatabase.db')
+
+    school = db.cursor()
+
+    new = school.execute('UPDATE students SET name=? and grade=? WHERE id?; ', (name, grade,)).fetchone()
 
 
+db.commit()
 
 
+def delete_student(name):
+    db = sqlite3.connect('mydatabase.db')
+
+    school = db.cursor()
+
+    delete = school.execute('DELETE * FROM students WHERE name=?;', (name,))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+db.commit()
